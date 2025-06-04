@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 /*** defines ***/
-
+#define KILO_VERSION "0.0.1"
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 /*** data ***/
@@ -105,6 +105,9 @@ void abFree(struct abuf *ab) { free(ab->b); }
 void editorDrawRows(struct abuf *ab) {
     int y;
     for (y = 0; y < E.screenrows; y++) {
+        // display the name of the editor and the version number 1/3rd down the
+        // way of the screen
+
         abAppend(ab, "~", 1);
         abAppend(ab, "\x1b[K", 3);
 
