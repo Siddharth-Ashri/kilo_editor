@@ -1,5 +1,5 @@
 /***includes ***/
-#include <asm-generic/ioctls.h>
+// #include <asm-generic/ioctls.h>
 #include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
@@ -107,8 +107,31 @@ void editorDrawRows(struct abuf *ab) {
     for (y = 0; y < E.screenrows; y++) {
         // display the name of the editor and the version number 1/3rd down the
         // way of the screen
+        if (y == E.screenrows / 3) {
+            // create a character buffer of 80 bytes
+            char welcome[80];
+            // get the size of welcome message with KILO_VERSION appened to it
+            int welcomelen =
+                snprintf(welcome, sizeof(welcome), "Kilo editor -- version %s",
+                         KILO_VERSION);
+            // if the size of the welcome message is greater than the columns
+            // truncate the size of the welcome message
+            if (welcomelen > E.screencols)
+                welcomelen = E.screencols;
+            int padding = (E.screencols - welcomelen) / 2;
+            if (padding) {
+                abAppend(ab, "~", 1);
+                while (padding) {
+                    abAppend(ab, " ", 1);
+                    padding--;
+                }
+            }
+            // print the welcome message
+            abAppend(ab, welcome, welcomelen);
+        } else {
+            abAppend(ab, "~", 1);
+        }
 
-        abAppend(ab, "~", 1);
         abAppend(ab, "\x1b[K", 3);
 
         if (y < E.screenrows - 1) {
